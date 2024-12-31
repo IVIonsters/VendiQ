@@ -4,7 +4,7 @@ function Header() {
   return (
     <header className="bg-white shadow-md">
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-bold text-indigo-600">
+        <Link to="/" className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-500">
           VendiQ
         </Link>
         <div className="flex-grow max-w-xl mx-4">
