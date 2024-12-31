@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { IoHomeOutline } from "react-icons/io5";
 
 function Header() {
   return (
@@ -25,6 +26,9 @@ function Header() {
           </form>
         </div>
         <div className="flex items-center space-x-4">
+          <Link to="/" className="text-gray-600 hover:text-indigo-600">
+            <IoHomeOutline className="text-2xl" />
+          </Link>
           <Link to="/products" className="text-gray-600 hover:text-indigo-600">
             Products
           </Link>
@@ -33,6 +37,9 @@ function Header() {
           </Link>
           <Link to="/login" className="text-gray-600 hover:text-indigo-600">
             Login
+          </Link>
+          <Link to="/signup" className="text-gray-600 hover:text-indigo-600">
+            Sign Up
           </Link>
         </div>
       </nav>
