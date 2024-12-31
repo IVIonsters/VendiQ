@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { FcGoogle } from "react-icons/fc";
+
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -35,9 +37,17 @@ function Login() {
             required
           />
         </div>
-        <button type="submit" className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">
+        <button type="submit" className="w-full bg-teal-500 text-white py-2 rounded hover:bg-teal-600">
           Login
         </button>
+        <button
+          type="submit"
+          className="w-full bg-teal-500 text-white py-2 flex items-center justify-center gap-2 rounded hover:bg-teal-600"
+        >
+          <FcGoogle />
+          Continue With Google..
+        </button>
+
       </form>
     </div>
   );

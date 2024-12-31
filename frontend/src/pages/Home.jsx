@@ -27,7 +27,7 @@ function Home() {
             Shop Now
           </Link>
           <Link
-            to="/login"
+            to="/SignUp"
             className="ml-4 px-6 py-2 bg-white border border-teal-500 text-teal-500 font-semibold rounded-lg shadow hover:bg-teal-50 transition"
           >
             Join Us
