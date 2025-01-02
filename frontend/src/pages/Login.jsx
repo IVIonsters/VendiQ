@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from 'react';
 import { FcGoogle } from "react-icons/fc";
 import { Link } from 'react-router-dom';
@@ -57,6 +58,12 @@ function Login() {
           <FcGoogle />
           Continue With Google..
         </button>
+        <p>
+          No account? No problem!{" "}
+          <Link to="/signup" className="text-teal-500 hover:underline font-bold">
+            Sign Up Here
+          </Link>
+        </p>
 
       </form>
     </div>

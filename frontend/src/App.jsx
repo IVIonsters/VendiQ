@@ -6,6 +6,7 @@ import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -14,12 +15,36 @@ function App() {
         <Header />
         <main className="container mx-auto px-4 py-8">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/products/:id" element={<ProductDetail />} />
-            <Route path="/cart" element={<Cart />} />
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} /> {/* Landing Page */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+
+            {/* Protected Routes */}
+            <Route
+              path="/products"
+              element={
+                <ProtectedRoute>
+                  <Products />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/products/:id"
+              element={
+                <ProtectedRoute>
+                  <ProductDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <Cart />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </main>
       </div>
