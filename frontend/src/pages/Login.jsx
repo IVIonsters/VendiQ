@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase/firebase";
 import {
   signInWithEmailAndPassword,
@@ -14,6 +15,8 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false); // Loading state
 
+  const navigate = useNavigate();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -25,6 +28,7 @@ function Login() {
         password
       );
       console.log("User logged in successfully!", userCredential.user);
+      navigate("/dashboard"); // Redirect to dashboard
     } catch (err) {
       setError(err.message);
     } finally {
@@ -39,6 +43,7 @@ function Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       console.log("Google user logged in:", result.user);
+      navigate("/dashboard"); // Redirect to dashboard
     } catch (err) {
       setError(err.message);
     } finally {

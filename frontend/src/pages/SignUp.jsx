@@ -1,23 +1,24 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+/* eslint-disable no-unused-vars */
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 
-
-
 function SignUp() {
-  const [email, setEmail] = useState(""); // Stores the email entered by the user
-  const [password, setPassword] = useState(""); // Stores the password entered by the user
-  const [fname, setFname] = useState(""); // Stores the first name entered by the user
-  const [lname, setLname] = useState(""); // Stores the last name entered by the user
-  const [error, setError] = useState(""); // Stores error messages
-  const [success, setSuccess] = useState(""); // Stores success messages
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
-    setSuccess(""); // Clear previous success messages
+    setError("");
+    setSuccess("");
 
     try {
       // Create user in Firebase Authentication
@@ -32,7 +33,8 @@ function SignUp() {
         createdAt: new Date(),
       });
 
-      setSuccess("Account created successfully!");
+      // Redirect to Dashboard
+      navigate("/dashboard");
     } catch (err) {
       setError(err.message);
     }
@@ -42,7 +44,6 @@ function SignUp() {
     <div className="max-w-md mx-auto">
       <h2 className="text-2xl font-bold mb-4">Sign Up</h2>
       {error && <p className="text-red-500">{error}</p>}
-      {success && <p className="text-green-500">{success}</p>}
       <form onSubmit={handleSignUp} className="space-y-4">
         <div>
           <label htmlFor="fname" className="block mb-1">
