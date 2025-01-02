@@ -1,14 +1,24 @@
 import { useState } from 'react';
 import { FcGoogle } from "react-icons/fc";
+import { Link } from 'react-router-dom';
+import { auth } from "../firebase/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState("");
 
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log('Login with', email, password);
+    setError(""); // Clear previous errors
+    try {
+      const userCredential = signInWithEmailAndPassword(auth, email, password);
+      console.log("User logged in successfully!", userCredential);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
