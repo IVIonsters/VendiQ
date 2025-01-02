@@ -2,7 +2,8 @@ import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase/firebase";
+import { auth, db } from "../firebase/firebase";
+import { setDoc, doc } from "firebase/firestore";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -37,17 +38,23 @@ function Login() {
   };
 
   const handleGoogleLogin = async () => {
-    setError("");
-    setLoading(true); // Set loading to true
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      console.log("Google user logged in:", result.user);
-      navigate("/dashboard"); // Redirect to dashboard
+      const user = result.user;
+
+      // Save user data to Firestore
+      await setDoc(doc(db, "users", user.uid), {
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        createdAt: new Date(),
+      });
+
+      console.log("Google user logged in and saved:", user);
     } catch (err) {
+      console.error("Google login error:", err);
       setError(err.message);
-    } finally {
-      setLoading(false); // Reset loading to false
     }
   };
 

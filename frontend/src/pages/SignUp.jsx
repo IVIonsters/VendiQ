@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 
 function SignUp() {
@@ -15,6 +15,7 @@ function SignUp() {
 
   const navigate = useNavigate();
 
+
   const handleSignUp = async (e) => {
     e.preventDefault();
     setError("");
@@ -24,6 +25,11 @@ function SignUp() {
       // Create user in Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+
+      // Set displayName for the user
+      await updateProfile(user, {
+        displayName: `${fname} ${lname}`, // Combine first and last names
+      });
 
       // Save user details to Firestore
       await setDoc(doc(db, "users", user.uid), {
@@ -39,6 +45,7 @@ function SignUp() {
       setError(err.message);
     }
   };
+
 
   return (
     <div className="max-w-md mx-auto">
