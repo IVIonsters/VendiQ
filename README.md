@@ -81,6 +81,20 @@
 
 <p align="right">(<a href="#vendiq">back to top</a>)</p>
 
+## Screenshots
+
+| <img src="./readmeImages/landingPage.png" width="600"> | <img src="./readmeImages/userDashboard.png" width="600"> |
+| :----------------------------------------------------: | :------------------------------------------------------: |
+|                  VendiQ Landing Page                   |                  VendiQ User Dashboard                   |
+
+<p align="right">(<a href="#vendiq">back to top</a>)</p>
+
+<!-- ## Demo
+
+![VendiQ Demo](./images/demo.gif)
+
+<p align="right">(<a href="#vendiq">back to top</a>)</p> -->
+
 ## Installation
 
 To set up the VendiQ project locally, ensure you have the following prerequisites:

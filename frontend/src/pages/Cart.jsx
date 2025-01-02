@@ -21,7 +21,7 @@ function Cart() {
       <div className="text-xl font-bold mt-8 text-right">
         Total: ${total.toFixed(2)}
       </div>
-      <button className="mt-4 bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 w-full">
+      <button className="mt-4 bg-teal-600 text-white px-6 py-3 rounded-md hover:bg-teal-700 w-full">
         Proceed to Checkout
       </button>
     </div>
