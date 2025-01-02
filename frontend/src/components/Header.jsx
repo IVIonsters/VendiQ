@@ -1,9 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IoHomeOutline } from "react-icons/io5";
 import { auth } from "../firebase/firebase";
 import { signOut } from "firebase/auth";
 
 function Header() {
+  // Navigation
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -11,8 +13,12 @@ function Header() {
       console.log("User logged out");
     } catch (err) {
       console.error("User Not Logged in", err);
+    } finally {
+      // Add a delay before navigating for protected routes to clear the user state
+      setTimeout(() => {
+        navigate("/");
+      }, 100); // 100ms delay
     }
-
   };
 
 
