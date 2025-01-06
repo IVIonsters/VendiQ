@@ -51,6 +51,9 @@ function Login() {
         createdAt: new Date(),
       });
 
+      // Redirect to dashboard
+      navigate("/dashboard");
+
       console.log("Google user logged in and saved:", user);
     } catch (err) {
       console.error("Google login error:", err);
