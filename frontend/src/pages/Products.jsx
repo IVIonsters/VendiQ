@@ -1,23 +1,74 @@
-import { Link } from 'react-router-dom';
-
-const products = [
-  { id: 1, name: 'Handmade Pottery', price: 49.99, image: 'https://images.unsplash.com/photo-1520408222757-6f9f95d87d5d?q=80&w=1280&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-  { id: 2, name: 'Knitted Scarf', price: 29.99, image: 'https://images.unsplash.com/photo-1457545195570-67f207084966?q=80&w=1492&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-  { id: 3, name: 'Wooden Cutting Board', price: 39.99, image: 'https://images.unsplash.com/photo-1666013942797-9daa4b8b3b4f?q=80&w=1367&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-  { id: 4, name: 'Beaded Necklace', price: 19.99, image: 'https://images.unsplash.com/photo-1669148595247-5e6cc19cbca6?q=80&w=1335&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-  { id: 5, name: 'Leather Wallet', price: 59.99, image: 'https://images.unsplash.com/photo-1582126486298-9d5194a50d82?q=80&w=1365&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-  { id: 6, name: 'Ceramic Mug', price: 14.99, image: 'https://images.unsplash.com/photo-1654682517264-b7bd4a61f136?q=80&w=1288&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' },
-];
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase/firebase"; // Import Firestore instance
 
 function Products() {
+  // State to store the list of products fetched from Firestore
+  const [products, setProducts] = useState([]);
+
+  // State to manage loading state during the fetch process
+  const [loading, setLoading] = useState(true);
+
+  // Fetch products from Firestore when the component mounts
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        // Fetch all documents in the "products" collection
+        const querySnapshot = await getDocs(collection(db, "products"));
+
+        // Map through the documents to create an array of product objects
+        const productList = querySnapshot.docs.map((doc) => ({
+          id: doc.id, // Include the document ID for linking
+          ...doc.data(), // Spread the rest of the fields (name, price, imageURL, etc.)
+        }));
+
+        // Update the state with the fetched products
+        setProducts(productList);
+      } catch (error) {
+        // Log any errors that occur during the fetch
+        console.error("Error fetching products:", error);
+      } finally {
+        // Stop the loading state once fetching is complete
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []); // Empty dependency array ensures this only runs once when the component mounts
+
+  // Display a loading message while the products are being fetched
+  if (loading) {
+    return <p>Loading products...</p>;
+  }
+
+  // Render the products once they are fetched
   return (
     <div>
+      {/* Page Header */}
       <h1 className="text-3xl font-bold mb-8">Our Products</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
+
+      {/* Grid Container for Products */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => (
-          <Link key={product.id} to={`/products/${product.id}`} className="border-2 border-gray-300 p-4 rounded-md hover:shadow-lg">
-            <img src={product.image} alt={product.name} className="w-96 h-96 object-cover mb-4 items-" />
+          // Link each product to its detail page using its Firestore document ID
+          <Link
+            key={product.id}
+            to={`/products/${product.id}`} // Dynamic link for the product
+            className="border p-4 rounded-md hover:shadow-lg"
+          >
+            {/* Product Image */}
+            <img
+              src={product.imageURL} // Image URL from Firestore
+              alt={product.name} // Alt text for accessibility
+              className="w-96 h-96 object-cover mb-4" // Image styling
+            />
+
+            {/* Product Name */}
             <h2 className="text-xl font-semibold">{product.name}</h2>
+
+            {/* Product Price */}
             <p className="text-gray-600">${product.price.toFixed(2)}</p>
           </Link>
         ))}
