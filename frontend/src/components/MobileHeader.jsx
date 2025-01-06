@@ -1,8 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
+import { TiThMenuOutline } from "react-icons/ti";
 import { IoHomeOutline, IoCartOutline } from "react-icons/io5";
 import { auth } from "../firebase/firebase";
 import { signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useState } from "react";
 
 function MobileHeader() {
   // Navigation
@@ -10,6 +12,9 @@ function MobileHeader() {
 
   // Get current user state
   const [user] = useAuthState(auth);
+
+  // State for mobile menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -61,7 +66,11 @@ function MobileHeader() {
             </button>
           </form>
         </div>
-        <div className="flex items-center space-x-4">
+        {/* Links */}
+        <button onClick={() => setIsMenuOpen(!isMenuOpen)}><TiThMenuOutline className="text-3xl" /></button>
+      </nav>
+      {isMenuOpen && (
+        <div className="flex items-center justify-center space-x-4">
           <Link to="/" className="text-gray-600 hover:text-teal-600">
             <IoHomeOutline className="text-2xl" />
           </Link>
@@ -95,7 +104,7 @@ function MobileHeader() {
             <IoCartOutline className="text-2xl" />
           </Link>
         </div>
-      </nav>
+      )}
     </header>
   );
 }

@@ -61,6 +61,7 @@ function DesktopHeader() {
             </button>
           </form>
         </div>
+        {/* Links */}
         <div className="flex items-center space-x-4">
           <Link to="/" className="text-gray-600 hover:text-teal-600">
             <IoHomeOutline className="text-2xl" />
