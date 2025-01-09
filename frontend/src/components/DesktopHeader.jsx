@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Link, useNavigate } from "react-router-dom";
 import { IoHomeOutline, IoCartOutline, IoMenuSharp } from "react-icons/io5";
 import { auth } from "../firebase/firebase";
@@ -8,7 +9,7 @@ import { useState } from "react";
 function DesktopHeader() {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -23,16 +24,16 @@ function DesktopHeader() {
     }
   };
 
-  const categories = [
-    "Tech Gadgets",
-    "Home Decor",
-    "Jewelry",
-    "Art",
-    "Books",
-    "Food & Drink",
-    "Clothing",
-    "Toys & Games",
-  ];
+  // const categories = [
+  //   "Tech Gadgets",
+  //   "Home Decor",
+  //   "Jewelry",
+  //   "Art",
+  //   "Books",
+  //   "Food & Drink",
+  //   "Clothing",
+  //   "Toys & Games",
+  // ];
 
   return (
     <header className="bg-white shadow-md">
@@ -46,7 +47,7 @@ function DesktopHeader() {
         </Link>
 
         {/* Categories Dropdown */}
-        <div className="relative">
+        {/* <div className="relative">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="flex items-center space-x-2 text-gray-600 hover:text-teal-600"
@@ -68,7 +69,7 @@ function DesktopHeader() {
               ))}
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* Search Bar */}
         <div className="flex-grow max-w-lg mx-4">
