@@ -4,39 +4,55 @@ import { Link } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/firebase"; // Import Firestore instance
 
+
 function Products() {
+
   // State to store the list of products fetched from Firestore
   const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
 
   // State to manage loading state during the fetch process
   const [loading, setLoading] = useState(true);
 
-  // Fetch products from Firestore when the component mounts
+
   useEffect(() => {
     const fetchProducts = async () => {
-      try {
-        // Fetch all documents in the "products" collection
-        const querySnapshot = await getDocs(collection(db, "products"));
+      setLoading(true); // Start loading state
 
-        // Map through the documents to create an array of product objects
-        const productList = querySnapshot.docs.map((doc) => ({
+      try {
+        let queryRef = collection(db, "products");
+
+        // Apply category filter if a specific category is selected
+        if (category !== "All") {
+          queryRef = query(queryRef, where("category", "==", category));
+        }
+
+        // Fetch products matching the query
+        const querySnapshot = await getDocs(queryRef);
+        let productList = querySnapshot.docs.map((doc) => ({
           id: doc.id, // Include the document ID for linking
           ...doc.data(), // Spread the rest of the fields (name, price, imageURL, etc.)
         }));
 
-        // Update the state with the fetched products
-        setProducts(productList);
+        // Apply search filter locally (Firestore text search requires additional setup)
+        if (searchTerm.trim() !== "") {
+          productList = productList.filter((product) =>
+            product.name.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+        }
+
+        setProducts(productList); // Update state with the filtered products
       } catch (error) {
-        // Log any errors that occur during the fetch
-        console.error("Error fetching products:", error);
+        console.error("Error fetching products:", error); // Log errors
       } finally {
-        // Stop the loading state once fetching is complete
-        setLoading(false);
+        setLoading(false); // Stop loading state
       }
     };
 
     fetchProducts();
-  }, []); // Empty dependency array ensures this only runs once when the component mounts
+  }, [category, searchTerm]); // Re-run when category or searchTerm changes
+
 
   // Display a loading message while the products are being fetched
   if (loading) {
@@ -48,7 +64,6 @@ function Products() {
     <div>
       {/* Page Header */}
       <h1 className="text-3xl font-bold mb-8">Our Products</h1>
-
       {/* Grid Container for Products */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => (
