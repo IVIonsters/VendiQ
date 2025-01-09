@@ -6,6 +6,8 @@ import Cart from './pages/Cart';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
+import Wishlist from './pages/Wishlist';
+import Orders from './pages/orders';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -42,6 +44,20 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } />
+            <Route
+              path="/wishlist"
+              element={
+                <ProtectedRoute>
+                  <Wishlist />
+                </ProtectedRoute>
+              } />
+            <Route
+              path="/orders"
+              element={
+                <ProtectedRoute>
+                  <Orders />
                 </ProtectedRoute>
               } />
           </Routes>
