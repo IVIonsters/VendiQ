@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './pages/Home';
 import Products from './pages/Products';
-import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
@@ -27,14 +26,6 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Products />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/products/:id"
-              element={
-                <ProtectedRoute>
-                  <ProductDetail />
                 </ProtectedRoute>
               }
             />
