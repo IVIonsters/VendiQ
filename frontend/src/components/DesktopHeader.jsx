@@ -1,15 +1,15 @@
+/* eslint-disable no-unused-vars */
 import { Link, useNavigate } from "react-router-dom";
-import { IoHomeOutline, IoCartOutline } from "react-icons/io5";
+import { IoHomeOutline, IoCartOutline, IoMenuSharp } from "react-icons/io5";
 import { auth } from "../firebase/firebase";
 import { signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useState } from "react";
 
 function DesktopHeader() {
-  // Navigation
   const navigate = useNavigate();
-
-  // Get current user state
   const [user] = useAuthState(auth);
+  // const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -20,20 +20,59 @@ function DesktopHeader() {
     } finally {
       setTimeout(() => {
         navigate("/");
-      }, 100); // Delay before navigating for auth state to update
+      }, 100);
     }
   };
 
+  // const categories = [
+  //   "Tech Gadgets",
+  //   "Home Decor",
+  //   "Jewelry",
+  //   "Art",
+  //   "Books",
+  //   "Food & Drink",
+  //   "Clothing",
+  //   "Toys & Games",
+  // ];
+
   return (
     <header className="bg-white shadow-md">
-      <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <nav className="container mx-auto px-4 py-3 flex items-center justify-between">
+        {/* Logo */}
         <Link
           to="/"
           className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-500"
         >
           VendiQ
         </Link>
-        <div className="flex-grow max-w-xl mx-4">
+
+        {/* Categories Dropdown */}
+        {/* <div className="relative">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="flex items-center space-x-2 text-gray-600 hover:text-teal-600"
+          >
+            <IoMenuSharp className="text-3xl" />
+            <span>Categories</span>
+          </button>
+          {isMenuOpen && (
+            <div className="absolute left-0 mt-2 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+              {categories.map((category) => (
+                <Link
+                  key={category}
+                  to={`/products?category=${encodeURIComponent(category)}`}
+                  className="block px-4 py-2 text-gray-700 hover:bg-teal-100 hover:text-teal-600 text-sm text-center"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {category}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div> */}
+
+        {/* Search Bar */}
+        <div className="flex-grow max-w-lg mx-4">
           <form className="relative">
             <input
               type="text"
@@ -42,7 +81,7 @@ function DesktopHeader() {
             />
             <button
               type="submit"
-              className="absolute right-0 top-0 mt-2 mr-4 text-gray-600 hover:text-teal-600"
+              className="absolute right-0 top-0 mt-1 mr-4 text-gray-600 hover:text-teal-600"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -61,8 +100,9 @@ function DesktopHeader() {
             </button>
           </form>
         </div>
-        {/* L */}
-        <div className="flex items-center space-x-4">
+
+        {/* Links and Actions */}
+        <div className="flex items-center space-x-6">
           <Link to="/" className="text-gray-600 hover:text-teal-600">
             <IoHomeOutline className="text-2xl" />
           </Link>
@@ -71,14 +111,12 @@ function DesktopHeader() {
           </Link>
           {user ? (
             <>
-              {/* Dashboard Button */}
               <Link
                 to="/dashboard"
                 className="text-gray-600 hover:text-teal-600"
               >
                 Dashboard
               </Link>
-              {/* Logout Button */}
               <p
                 onClick={handleLogout}
                 className="text-gray-600 hover:text-teal-600 cursor-pointer"
@@ -87,7 +125,6 @@ function DesktopHeader() {
               </p>
             </>
           ) : (
-            /* Login Button */
             <Link to="/login" className="text-gray-600 hover:text-teal-600">
               Login
             </Link>
