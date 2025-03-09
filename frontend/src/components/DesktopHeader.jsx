@@ -9,7 +9,7 @@ import { useState } from "react";
 function DesktopHeader() {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
-  // const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
 
   const handleLogout = async () => {
     try {
@@ -24,16 +24,14 @@ function DesktopHeader() {
     }
   };
 
-  // const categories = [
-  //   "Tech Gadgets",
-  //   "Home Decor",
-  //   "Jewelry",
-  //   "Art",
-  //   "Books",
-  //   "Food & Drink",
-  //   "Clothing",
-  //   "Toys & Games",
-  // ];
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchInput.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchInput.trim())}`);
+    } else {
+      navigate('/products');
+    }
+  };
 
   return (
     <header className="bg-white shadow-md">
@@ -46,38 +44,15 @@ function DesktopHeader() {
           VendiQ
         </Link>
 
-        {/* Categories Dropdown */}
-        {/* <div className="relative">
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex items-center space-x-2 text-gray-600 hover:text-teal-600"
-          >
-            <IoMenuSharp className="text-3xl" />
-            <span>Categories</span>
-          </button>
-          {isMenuOpen && (
-            <div className="absolute left-0 mt-2 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-              {categories.map((category) => (
-                <Link
-                  key={category}
-                  to={`/products?category=${encodeURIComponent(category)}`}
-                  className="block px-4 py-2 text-gray-700 hover:bg-teal-100 hover:text-teal-600 text-sm text-center"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {category}
-                </Link>
-              ))}
-            </div>
-          )}
-        </div> */}
-
         {/* Search Bar */}
         <div className="flex-grow max-w-lg mx-4">
-          <form className="relative">
+          <form className="relative" onSubmit={handleSearch}>
             <input
               type="text"
               placeholder="Search for items..."
               className="w-full py-2 px-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
             />
             <button
               type="submit"

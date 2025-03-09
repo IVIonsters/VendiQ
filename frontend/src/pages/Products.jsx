@@ -1,14 +1,29 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore"; // Import necessary Firestore utilities
 import { db } from "../firebase/firebase"; // Import Firestore instance
 
 function Products() {
+  const location = useLocation();
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState("All"); // Default category is "All"
   const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const [loading, setLoading] = useState(true); // Loading state
+
+  // Extract search query param from URL
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const searchFromURL = queryParams.get("search");
+
+    if (searchFromURL) {
+      setSearchTerm(searchFromURL);
+    } else {
+      setSearchTerm("");
+    }
+  }, [location.search]);
+
+  // Remove the handleSearchChange function since we're removing the search input
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -30,10 +45,12 @@ function Products() {
           ...doc.data(),
         }));
 
-        // Apply search term filter (client-side filtering)
+        // Enhanced search filtering - checks both name and category
         if (searchTerm.trim() !== "") {
+          const searchLower = searchTerm.toLowerCase();
           productList = productList.filter((product) =>
-            product.name.toLowerCase().includes(searchTerm.toLowerCase())
+            product.name.toLowerCase().includes(searchLower) ||
+            product.category.toLowerCase().includes(searchLower)
           );
         }
 
@@ -57,8 +74,10 @@ function Products() {
       {/* Page Header */}
       <h1 className="text-3xl font-bold mb-8">Our Products</h1>
 
+      {/* Search bar removed */}
+
       {/* Category Selector */}
-      <div className="mb-6 flex items-center space-x-4">
+      <div className="mb-6 flex flex-wrap items-center gap-2">
         <button
           onClick={() => setCategory("All")}
           className={`px-4 py-2 rounded-md ${category === "All" ? "bg-teal-600 text-white" : "bg-gray-200"
@@ -122,8 +141,36 @@ function Products() {
         >
           Toys & Games
         </button>
+      </div>
 
+      {/* Active Search Filters - show when there's a search */}
+      {searchTerm && (
+        <div className="mb-4 flex items-center">
+          <span className="text-gray-600 mr-2">Search for:</span>
+          <span className="bg-teal-100 text-teal-700 px-3 py-1 rounded-full flex items-center">
+            &quot;{searchTerm}&quot;
+            <button
+              onClick={() => {
+                setSearchTerm("");
+                // Remove search from URL without page refresh
+                const newUrl = new URL(window.location.href);
+                newUrl.searchParams.delete("search");
+                window.history.pushState({}, "", newUrl);
+              }}
+              className="ml-2 text-teal-800 hover:text-teal-900"
+              aria-label="Clear search"
+            >
+              ✕
+            </button>
+          </span>
+        </div>
+      )}
 
+      {/* Results count */}
+      <div className="mb-4">
+        <p className="text-gray-600">
+          {products.length} {products.length === 1 ? 'product' : 'products'} found
+        </p>
       </div>
 
       {/* Product Grid */}
@@ -144,6 +191,13 @@ function Products() {
           </Link>
         ))}
       </div>
+
+      {/* No results message */}
+      {products.length === 0 && (
+        <div className="text-center py-8">
+          <p className="text-lg text-gray-600">No products found matching your criteria.</p>
+        </div>
+      )}
     </div>
   );
 }
