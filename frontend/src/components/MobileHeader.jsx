@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import { TiThMenuOutline } from "react-icons/ti";
-import { IoHomeOutline, IoCartOutline } from "react-icons/io5";
+import { IoHomeOutline, IoCartOutline, IoCloseOutline, IoGiftOutline, IoBodyOutline, IoLogOutOutline } from "react-icons/io5";
 import { auth } from "../firebase/firebase";
 import { signOut } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function MobileHeader() {
   // Navigation
@@ -16,6 +16,18 @@ function MobileHeader() {
   // State for mobile menu
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Prevent scrolling when menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMenuOpen]);
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -23,14 +35,19 @@ function MobileHeader() {
     } catch (err) {
       console.error("User Not Logged in", err);
     } finally {
+      setIsMenuOpen(false);
       setTimeout(() => {
         navigate("/");
       }, 100); // Delay before navigating for auth state to update
     }
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
-    <header className="bg-white shadow-md">
+    <header className="bg-white shadow-md relative z-50">
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link
           to="/"
@@ -66,45 +83,94 @@ function MobileHeader() {
             </button>
           </form>
         </div>
-        {/* Links */}
-        <button onClick={() => setIsMenuOpen(!isMenuOpen)}><TiThMenuOutline className="text-3xl" /></button>
+        {/* Menu Button */}
+        <button
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle menu"
+          className="focus:outline-none"
+        >
+          <TiThMenuOutline className="text-3xl" />
+        </button>
       </nav>
+
+      {/* Overlay */}
       {isMenuOpen && (
-        <div className="flex items-center justify-center space-x-4">
-          <Link to="/" className="text-gray-600 hover:text-teal-600">
-            <IoHomeOutline className="text-2xl" />
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={closeMenu}
+        ></div>
+      )}
+
+      {/* Slide-out Menu */}
+      <div
+        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+      >
+        <div className="flex justify-between items-center p-4 border-b">
+          <span className="text-xl font-medium text-teal-600">Menu</span>
+          <button onClick={closeMenu} aria-label="Close menu">
+            <IoCloseOutline className="text-2xl" />
+          </button>
+        </div>
+
+        <div className="flex flex-col p-4 space-y-4">
+          <Link
+            to="/"
+            className="flex items-center space-x-2 text-gray-700 hover:text-teal-600"
+            onClick={closeMenu}
+          >
+            <IoHomeOutline className="text-xl" />
+            <span>Home</span>
           </Link>
-          <Link to="/products" className="text-gray-600 hover:text-teal-600">
-            Products
+
+          <Link
+            to="/products"
+            className="flex items-center space-x-2 text-gray-700 hover:text-teal-600"
+            onClick={closeMenu}
+          >
+            <IoGiftOutline className="text-xl" />
+            <span>Products</span>
           </Link>
+
+          <Link
+            to="/cart"
+            className="flex items-center space-x-2 text-gray-700 hover:text-teal-600"
+            onClick={closeMenu}
+          >
+            <IoCartOutline className="text-xl" />
+            <span>Cart</span>
+          </Link>
+
           {user ? (
             <>
-              {/* Dashboard Button */}
               <Link
                 to="/dashboard"
-                className="text-gray-600 hover:text-teal-600"
+                className="flex items-center space-x-2 text-gray-700 hover:text-teal-600"
+                onClick={closeMenu}
               >
-                Dashboard
+                <IoBodyOutline className="text-xl" />
+                <span>Dashboard</span>
               </Link>
-              {/* Logout Button */}
-              <p
+
+              <button
                 onClick={handleLogout}
-                className="text-gray-600 hover:text-teal-600 cursor-pointer"
+                className="flex items-center space-x-2 text-gray-700 hover:text-teal-600 text-left"
               >
-                Logout
-              </p>
+                <IoLogOutOutline className="text-xl" />
+                <span>Logout</span>
+              </button>
             </>
           ) : (
-            /* Login Button */
-            <Link to="/login" className="text-gray-600 hover:text-teal-600">
-              Login
+            <Link
+              to="/login"
+              className="flex items-center space-x-2 text-gray-700 hover:text-teal-600"
+              onClick={closeMenu}
+            >
+              <span>Login</span>
             </Link>
           )}
-          <Link to="/cart" className="text-gray-600 hover:text-teal-600">
-            <IoCartOutline className="text-2xl" />
-          </Link>
         </div>
-      )}
+      </div>
     </header>
   );
 }
